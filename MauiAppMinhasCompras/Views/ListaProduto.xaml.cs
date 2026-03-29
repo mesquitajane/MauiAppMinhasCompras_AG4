@@ -16,20 +16,24 @@ public partial class ListaProduto : ContentPage
         lst_produtos.ItemsSource = lista;
     }
 
-    protected async override void OnAppearing()
+    private async Task CarregarTodosAsync()
     {
         try
         {
             lista.Clear();
-
             List<Produto> tmp = await App.Db.GetAll();
-
             tmp.ForEach(i => lista.Add(i));
         }
         catch (Exception ex)
         {
             await DisplayAlert("Ops", ex.Message, "OK");
         }
+    }
+
+    protected override async void OnAppearing()
+    {
+        pickerCategoria.SelectedIndex = 0;  // "Todas" selecionado
+        await CarregarTodosAsync();
     }
     private void ToolbarItem_Clicked(object sender, EventArgs e)
     {
@@ -62,6 +66,27 @@ public partial class ListaProduto : ContentPage
         }
     }
 
+    private async void PickerCategoria_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        try
+        {
+            string categoria = pickerCategoria.SelectedItem?.ToString();
+            if (categoria == "Todas")
+            {
+                await CarregarTodosAsync();
+            }
+            else
+            {
+                lista.Clear();
+                List<Produto> tmp = await App.Db.GetProdutosPorCategoriaAsync(categoria);  
+                tmp.ForEach(i => lista.Add(i));
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "OK");
+        }
+    }
     private void ToolbarItem_Clicked_1(object sender, EventArgs e)
     {
         double soma = lista.Sum(i => i.Total);
@@ -108,6 +133,18 @@ public partial class ListaProduto : ContentPage
         catch (Exception ex)
         {
             DisplayAlert("Ops", ex.Message, "OK");
+        }
+
+    }
+    private async void ToolbarItemRelatorio_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            await Navigation.PushAsync(new Views.RelatorioPage());
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "OK");
         }
     }
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppMinhasCompras.Views.RelatorioPage"
+             Title="Relatório por Categoria">
+
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <Label Text="Total por Categoria" 
+               FontSize="20" FontAttributes="Bold" 
+               HorizontalOptions="Center"/>
+
+        <ListView x:Name="ListaRelatorio">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Grid.Column="0" Text="{Binding Categoria}" FontAttributes="Bold"/>
+                            <Label Grid.Column="1" Text="{Binding TotalGasto, StringFormat='R$ {0:F2}'}" 
+                                   HorizontalOptions="End"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Label x:Name="LblTotalGeral" Text="Total Geral: R$ 0,00"
+               FontSize="18" FontAttributes="Bold" 
+               HorizontalOptions="Center"/>
+
+        <Button Text="Voltar" Clicked="OnVoltarClicked" 
+                HorizontalOptions="Center"/>
+    </VerticalStackLayout>
+</ContentPage>

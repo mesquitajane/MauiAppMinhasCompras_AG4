@@ -8,7 +8,14 @@ public partial class EditarProduto : ContentPage
 	{
 		InitializeComponent();
 	}
-
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        if (BindingContext is Produto produto)
+        {
+            picker_categoria.SelectedItem = produto.Categoria;
+        }
+    }
     private async void ToolbarItem_Clicked(object sender, EventArgs e)
     {
         try
@@ -19,7 +26,8 @@ public partial class EditarProduto : ContentPage
                 Id = produto_anexado.Id,
                 Descricao = txt_descricao.Text,
                 Quantidade = Convert.ToDouble(txt_quantidade.Text),
-                Preco = Convert.ToDouble(txt_preco.Text)
+                Preco = Convert.ToDouble(txt_preco.Text),
+                Categoria = picker_categoria.SelectedItem?.ToString()
             };
 
             await App.Db.Update(p);
